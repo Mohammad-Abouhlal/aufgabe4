@@ -1,0 +1,4 @@
+Ausfüren von folgenden Befehle:
+terraform init
+terraform plan
+terraform apply
