@@ -1,76 +1,126 @@
+/* styles.css */
+
 body {
-	font-family: Arial, sans-serif;
+	font-family: sans-serif;
 	margin: 20px;
 	background-color: #f4f4f4;
 }
 
-h1 {
-	color: #333;
-	text-align: center;
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-	max-width: 1200px;
-	margin: 0 auto;
+h1 {
+	text-align: center;
+	color: #333;
 }
 
 .product-list {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 	gap: 20px;
-	justify-content: center;
+	margin-top: 30px;
 }
 
 .product-item {
-	background-color: white;
+	border: 1px solid #ddd;
 	border-radius: 8px;
-	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-	width: 250px;
-	padding: 20px;
+	padding: 15px;
 	text-align: center;
-	transition: transform 0.3s;
-}
-
-.product-item:hover {
-	transform: translateY(-10px);
+	background-color: #fff;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+	display: flex; /* Added for better layout */
+	flex-direction: column; /* Added for better layout */
+	justify-content: space-between; /* Added for better layout */
 }
 
 .product-image {
-	width: 100%;
-	height: 300px;
-	max-width: 200px;
+	max-width: 100%;
+	height: 150px; /* Fixed height for consistency */
+	object-fit: contain; /* Ensures image fits without distortion */
 	margin-bottom: 10px;
-	border-radius: 8px;
+	border-radius: 4px;
 }
 
 .product-name {
-	font-size: 1.2rem;
-	font-weight: bold;
-	margin-bottom: 10px;
+	font-size: 1.2em;
+	margin-bottom: 5px;
+	color: #0056b3;
 }
 
 .product-description {
-	font-size: 1rem;
-	color: #555;
-	margin-bottom: 15px;
+	font-size: 0.9em;
+	color: #666;
+	margin-bottom: 10px;
+	flex-grow: 1; /* Allows description to take available space */
 }
 
 .product-price {
-	font-size: 1.4rem;
-	color: #2ecc71;
-	margin-bottom: 20px;
+	font-size: 1.3em;
+	font-weight: bold;
+	color: #28a745;
+	margin-bottom: 15px;
+	display: block; /* Make it a block element to give it its own line */
 }
 
 .product-btn {
-	background-color: #3498db;
+	background-color: #007bff;
 	color: white;
-	padding: 10px;
+	padding: 10px 15px;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	transition: background-color 0.3s;
+	font-size: 1em;
+	transition: background-color 0.3s ease;
+	width: 100%; /* Make button full width */
 }
 
 .product-btn:hover {
-	background-color: #2980b9;
+	background-color: #0056b3;
+}
+
+/* --- Notification Styles --- */
+.notification-container {
+	position: fixed; /* Fixes it to the viewport */
+	top: 20px;
+	right: 20px;
+	z-index: 1000; /* Ensures it's on top of other content */
+	display: flex;
+	flex-direction: column;
+	gap: 10px; /* Space between multiple notifications */
+}
+
+.notification {
+	background-color: #d4edda; /* Green for success */
+	color: #155724; /* Dark green text */
+	padding: 10px 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	opacity: 0; /* Start hidden for fade-in effect */
+	transform: translateY(-20px); /* Start slightly above for slide-down */
+	animation: fadeInSlideDown 0.3s ease-out forwards; /* Animation for appearance */
+	min-width: 200px;
+	text-align: center;
+}
+
+.notification.error {
+	background-color: #f8d7da; /* Red for error */
+	color: #721c24; /* Dark red text */
+}
+
+/* Keyframes for the notification animation */
+@keyframes fadeInSlideDown {
+	from {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }

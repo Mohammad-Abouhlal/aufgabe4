@@ -12,24 +12,77 @@
         <div id="product-list" class="product-list"></div>
     </div>
 
-    <script>
-    fetch('http://localhost:5000/products')
-      .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById('product-list');
-        data.forEach(product => {
-          const item = document.createElement('div');
-          item.classList.add('product-item');
-          item.innerHTML = `
-            <img src="./${product.image}" alt="${product.name}" class="product-image">
-            <h2 class="product-name">${product.name}</h2>
-            <p class="product-description">${product.description}</p>
-            <span class="product-price">${product.price}$</span>
-            <button class="product-btn">Jetzt kaufen</button>
-          `;
-          list.appendChild(item);
+     <div id="notification-container" class="notification-container"></div>
+
+<script>
+    const productListContainer = document.getElementById('product-list');
+    const notificationContainer = document.getElementById('notification-container');
+
+    function showNotification(message, isError = false) {
+        console.log('Notification:', message);
+        if (!notificationContainer) { 
+            console.error('Error: notification-container element not found during notification display!');
+            return;
+        }
+        const notification = document.createElement('div');
+        notification.className = 'notification' + (isError ? ' error' : '');
+        notification.textContent = message;
+        notificationContainer.appendChild(notification);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+fetch('http://localhost:5000/products')
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+      return res.json();
+  })
+  .then(data => {
+    data.forEach(product => {
+      const item = document.createElement('div');
+      item.classList.add('product-item');
+
+      item.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" class="product-image">
+        <h2 class="product-name">${product.name}</h2>
+        <p class="product-description">${product.description}</p>
+        <span class="product-price">${product.price}$</span>
+        <button class="product-btn">Jetzt kaufen</button>
+      `;
+
+      const button = item.querySelector('.product-btn');
+
+                button.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('http://localhost:5000/notifications', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ productId: product.id })
+                        });
+
+                        if (response.ok) {
+                            showNotification('✅ Artikel erfolgreich gekauft!');
+                        } else {
+                            const errorData = await response.json().catch(() => ({ message: 'Unbekannter Fehler' }));
+                            showNotification(`❌ Fehler beim Kauf: ${errorData.message || response.statusText}`, true);
+                        }
+                    } catch (error) {
+                        console.error('Network or fetch error:', error);
+                        showNotification('❌ Netzwerkfehler. Der Server ist möglicherweise nicht erreichbar.', true);
+                    }
+                });
+
+                productListContainer.appendChild(item); 
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+            showNotification('❌ Produkte konnten nicht geladen werden. Server möglicherweise nicht erreichbar.', true);
         });
-      });
-    </script>
+</script>
+
 </body>
 </html>
